@@ -159,8 +159,17 @@ function calculateWinner(squares) {
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i];
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-        // post to backend
-        // do it here.
+      // save the state of the board here.
+      var squaresJson = JSON.stringify(squares);
+      fetch('http://localhost:8080/save', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: squaresJson
+        })
+      // make sure this only happens once
       return squares[a];
     }
   }
