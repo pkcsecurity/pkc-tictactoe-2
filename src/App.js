@@ -53,7 +53,8 @@ class Game extends React.Component {
         }
       ],
       stepNumber: 0,
-      xIsNext: true
+      xIsNext: true,
+      backend: '',
     };
   }
 
@@ -83,10 +84,30 @@ class Game extends React.Component {
     });
   }
 
+  componentDidMount() {
+    fetch("http://localhost:8080/")
+      .then(res => res.json())
+      .then(
+        (result) => {
+          this.setState({
+            backend: result.a
+          });
+        },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        (error) => {
+          this.setState({
+          });
+        }
+      )
+  }
+
   render() {
     const history = this.state.history;
     const current = history[this.state.stepNumber];
     const winner = calculateWinner(current.squares);
+    const backend = this.state.backend;
 
     const moves = history.map((step, move) => {
       const desc = move ?
@@ -108,6 +129,7 @@ class Game extends React.Component {
 
     return (
       <div className="game">
+        <div>Yo: {backend}</div>
         <div className="game-board">
           <Board
             squares={current.squares}
